@@ -9,12 +9,16 @@ function App() {
 
   return (
     <>
-      <Header/>
+      <Header />
       <main className="w-full px-42 pt-36">
-          <IntroductionTemplate/>
-          <WhatIaTemplate/>
-          <FeatureTemplate/>
-          <InterestTemplate/>
+        <IntroductionTemplate />
+        <div id="que-es">
+          <WhatIaTemplate />
+        </div>
+        <div id="caracteristicas">
+          <FeatureTemplate />
+        </div>
+        <InterestTemplate />
       </main>
     </>
   )

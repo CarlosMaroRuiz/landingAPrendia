@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
 @theme {
   --color-pink-ia: #C90166;
   --color-green-ia:#009887;
