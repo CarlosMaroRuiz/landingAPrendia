@@ -7,7 +7,7 @@ const ContentCard = ({ urlImage, titulo, parrafo, alineacion = "imagen-texto", d
   return (
     <section
       ref={ref}
-      className={`flex flex-col md:flex-row items-center gap-6 md:gap-x-16 w-full mb-12 md:mb-20 transition-all duration-1000 ease-out ${!isImageFirst ? 'md:flex-row-reverse' : ''} ${
+      className={`flex flex-col-reverse md:flex-row items-center gap-6 md:gap-x-16 w-full mb-12 md:mb-20 transition-all duration-1000 ease-out ${!isImageFirst ? 'md:flex-row-reverse' : ''} ${
         isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
       }`}
       style={{ transitionDelay: `${delay}ms` }}
