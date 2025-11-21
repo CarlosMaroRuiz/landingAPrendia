@@ -29,13 +29,12 @@ const ContactForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-   
+
   }
 
   return (
-    <form onSubmit={handleSubmit} className="w-full mt-12 space-y-6 ">
-      <div className="w-full  ">
-
+    <form onSubmit={handleSubmit} className="w-full mt-8 md:mt-12 space-y-4 md:space-y-6">
+      <div className="w-full">
 
         <Select
           label="Comunidad a la que pertenece el beneficiario"
@@ -63,9 +62,9 @@ const ContactForm = () => {
           </div>
         )}
 
-        <p className="text-pink-ia text-xl font-semibold my-3">Datos de la persona de contacto</p>
+        <p className="text-pink-ia text-lg md:text-xl font-semibold my-3">Datos de la persona de contacto</p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full ">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 w-full">
 
           <Input
             label="Nombre(s)"
@@ -107,7 +106,6 @@ const ContactForm = () => {
             value={formData.telefono}
             onChange={handleChange}
           />
-
 
           <Input
             label="Código postal"
@@ -165,14 +163,14 @@ const ContactForm = () => {
           </div>
 
           {/* Botón */}
-          <div className="col-span-1 md:col-span-2 flex justify-end">
+          <div className="col-span-1 md:col-span-2 flex justify-center md:justify-end">
             <button
               type="submit"
-              className="bg-pink-ia text-white px-10 py-3 rounded-lg text-xl font-bold transition-all duration-300 ease-in-out hover:bg-opacity-90 hover:scale-105 hover:shadow-xl flex items-center gap-3"
+              className="bg-pink-ia text-white px-8 md:px-10 py-3 rounded-lg text-lg md:text-xl font-bold transition-all duration-300 ease-in-out hover:bg-opacity-90 hover:scale-105 hover:shadow-xl flex items-center gap-3 w-full md:w-auto justify-center"
             >
               Enviar
               <svg
-                className="w-6 h-6"
+                className="w-5 h-5 md:w-6 md:h-6"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
