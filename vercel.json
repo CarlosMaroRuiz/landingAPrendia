@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/core/:path*",
-      "destination": "$VITE_API_CORE/:path*"
+      "destination": "$VITE_API_CORE/api/:path*"
     },
     {
       "source": "/api/form/:path*",
