@@ -32,7 +32,7 @@ const WhatIaTemplate = () => {
                     APREND<span className="text-pink-ia">IA</span> es una aplicación diseñada especialmente para apoyar en el proceso de alfabetización a personas sordas en el Estado de Chiapas, teniendo como premisa la educación bilingüe bicultural, centrándose en la enseñanza del español escrito como segunda lengua.
                 </p>
 
-                <img src={logo} alt="Logo APRENDIA" className="h-40 sm:h-48 md:h-72 lg:h-[29rem] w-auto" />
+                <img src={logo} alt="Educador de APRENDIA enseñando lengua de señas" loading="lazy" className="h-40 sm:h-48 md:h-72 lg:h-[29rem] w-auto" />
             </section>
         </div>
         </DecoratedLayout>

@@ -9,8 +9,8 @@ const Footer = () => {
             </p>
 
             <section className="w-full justify-center sm:justify-evenly flex flex-col sm:flex-row items-center gap-6 sm:gap-8 mt-6 sm:mt-10 md:mt-12 lg:mt-16">
-                <img src={up} alt="Universidad Politécnica" className="w-40 sm:w-56 md:w-72 lg:w-96 h-auto" />
-                <img src={secretaria} alt="Secretaría" className="w-40 sm:w-56 md:w-72 lg:w-96 h-auto" />
+                <img src={up} alt="Logo Universidad Politécnica de Chiapas" loading="lazy" className="w-40 sm:w-56 md:w-72 lg:w-96 h-auto" />
+                <img src={secretaria} alt="Logo Secretaría de Educación de Chiapas" loading="lazy" className="w-40 sm:w-56 md:w-72 lg:w-96 h-auto" />
             </section>
         </footer>
     )

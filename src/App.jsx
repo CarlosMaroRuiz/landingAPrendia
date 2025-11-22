@@ -4,30 +4,30 @@ import Footer from "./components/template/footerTemplat"
 import InterestTemplate from "./components/template/interestTemplat"
 import IntroductionTemplate from "./components/template/introductionTemplate"
 import WhatIaTemplate from "./components/template/whatIaTemplate"
+import ScrollToTop from "./components/atoms/scrollToTop"
 
 function App() {
   return (
     <>
       <Header />
-      <main className="w-full px-4 sm:px-8 md:px-16 lg:px-32 xl:px-42 pt-20 sm:pt-24 md:pt-32 lg:pt-36">
-       
+      <main className="w-full px-4 sm:px-8 md:px-16 lg:px-20 xl:px-20 pt-20 sm:pt-24 md:pt-32 lg:pt-36">
 
           <IntroductionTemplate />
-     
 
-         <div id="que-es" className="pt-6 md:pt-10">
+         <section id="que-es" className="pt-6 md:pt-10">
           <WhatIaTemplate />
-        </div>
+        </section>
 
-        <div id="caracteristicas">
+        <section id="caracteristicas">
           <FeatureTemplate />
-        </div>
+        </section>
 
-        <div id="me-interesa">
+        <section id="me-interesa">
           <InterestTemplate />
-        </div>
+        </section>
       </main>
       <Footer />
+      <ScrollToTop />
     </>
   )
 }

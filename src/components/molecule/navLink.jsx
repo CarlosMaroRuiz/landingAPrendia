@@ -25,6 +25,14 @@ const NavLink = ({ isMobile = false, onLinkClick }) => {
                 >
                     Características
                 </a>
+
+                 <a
+                    href="#me-interesa"
+                    onClick={handleLinkClick}
+                    className="text-lg font-medium text-gray-700 hover:text-pink-ia transition-colors w-full text-center py-2"
+                >
+                   Me interesa
+                </a>
                
             </nav>
         )

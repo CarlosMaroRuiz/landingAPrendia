@@ -23,7 +23,6 @@ const ContactForm = () => {
   const [submitting, setSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState(null)
 
-  // Cargar municipios al montar el componente (stateId = 1 para Chiapas)
   useEffect(() => {
     const fetchMunicipios = async () => {
       setLoadingMunicipios(true)
@@ -52,7 +51,6 @@ const ContactForm = () => {
 
     if (result.success) {
       setSubmitStatus({ type: 'success', message: 'Formulario enviado correctamente' })
-      // Limpiar formulario
       setFormData({
         comunidad: "",
         otraComunidad: "",
@@ -64,7 +62,6 @@ const ContactForm = () => {
         estado: "Chiapas",
         motivo: ""
       })
-      // Ocultar mensaje después de 3 segundos
       setTimeout(() => {
         setSubmitStatus(null)
       }, 3000)
@@ -90,7 +87,6 @@ const ContactForm = () => {
           onChange={handleChange}
         />
 
-        {/* Campo condicional para especificar otra comunidad */}
         {formData.comunidad === "OTROS" && (
           <div className="mt-4">
             <Input
@@ -171,7 +167,6 @@ const ContactForm = () => {
             onChange={handleChange}
           />
 
-          {/* TextArea ocupa las 2 columnas */}
           <div className="col-span-1 md:col-span-2">
             <TextArea
               label="Por qué me interesa"
@@ -186,7 +181,6 @@ const ContactForm = () => {
             />
           </div>
 
-          {/* Mensaje de estado */}
           {submitStatus && (
             <div className={`col-span-1 md:col-span-2 p-3 rounded-lg text-center ${
               submitStatus.type === 'success'
@@ -197,16 +191,15 @@ const ContactForm = () => {
             </div>
           )}
 
-          {/* Botón */}
           <div className="col-span-1 md:col-span-2 flex justify-center md:justify-end">
             <button
               type="submit"
               disabled={submitting}
-              className={`bg-pink-ia text-white px-8 md:px-10 py-3 rounded-lg text-lg md:text-xl font-bold transition-all duration-300 ease-in-out hover:bg-opacity-90 hover:scale-105 hover:shadow-xl flex items-center gap-3 w-full md:w-auto justify-center ${
+              className={`bg-pink-ia text-white px-8 md:px-10 py-3 rounded-lg text-lg md:text-xl font-bold transition-all duration-200 ease-in-out hover:bg-opacity-90 hover:scale-105 hover:shadow-xl active:scale-95 active:shadow-md flex items-center gap-3 w-full md:w-auto justify-center ${
                 submitting ? 'opacity-70 cursor-not-allowed' : ''
               }`}
             >
-              {submitting ? 'Enviando...' : 'Enviar'}
+              {submitting ? 'Enviando...' : 'Registrarme'}
               <svg
                 className="w-5 h-5 md:w-6 md:h-6"
                 fill="none"

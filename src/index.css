@@ -93,7 +93,77 @@ html {
 }
 
 .image-3d-hover:hover {
-  transform: perspective(1100px) rotateY(16deg) rotateX(13deg) scale(1.22);
-  filter: drop-shadow(0 28px 32px rgba(0, 0, 0, 0.28));
+  transform: perspective(1100px) rotateY(10deg) rotateX(8deg) scale(1.08);
+  filter: drop-shadow(0 20px 24px rgba(0, 0, 0, 0.2));
+}
+
+/* ========== MEJORAS UX MÓVIL ========== */
+
+/* Reducir animaciones para usuarios que lo prefieren (solo efectos de hover) */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .image-3d-hover:hover {
+    transform: none;
+  }
+}
+
+/* Touch feedback mejorado para dispositivos táctiles */
+@media (hover: none) and (pointer: coarse) {
+  .image-3d-hover:hover {
+    transform: none;
+    filter: none;
+  }
+
+  .image-3d-hover:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+}
+
+/* Scroll margin para secciones con header fijo */
+section[id] {
+  scroll-margin-top: 80px;
+}
+
+/* Botón flotante ir arriba - solo móvil */
+.scroll-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--color-pink-ia);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  z-index: 40;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.scroll-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.scroll-to-top:active {
+  transform: scale(0.95);
+}
+
+/* Ocultar en tablet y desktop */
+@media (min-width: 640px) {
+  .scroll-to-top {
+    display: none;
+  }
 }
 

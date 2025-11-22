@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/core/:path*",
+      "destination": "$VITE_API_CORE/:path*"
+    },
+    {
+      "source": "/api/form/:path*",
+      "destination": "$VITE_API_SERVICES_FORM/:path*"
+    }
+  ]
+}

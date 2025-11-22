@@ -13,7 +13,7 @@ const ContentCard = ({ urlImage, titulo, parrafo, alineacion = "imagen-texto", d
       style={{ transitionDelay: `${delay}ms` }}
     >
       <div className="shrink-0">
-        <img src={urlImage} alt={titulo} className="w-40 h-40 sm:w-48 sm:h-48 md:w-72 md:h-72 lg:w-96 lg:h-96 object-contain" />
+        <img src={urlImage} alt={titulo} loading="lazy" className="w-40 h-40 sm:w-48 sm:h-48 md:w-72 md:h-72 lg:w-96 lg:h-96 object-contain" />
       </div>
 
       <article className="flex flex-col gap-y-2 sm:gap-y-3 md:gap-y-4 lg:gap-y-6 flex-1">
