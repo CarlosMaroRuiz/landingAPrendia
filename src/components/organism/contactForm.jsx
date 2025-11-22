@@ -1,7 +1,9 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Input from "../atoms/input"
 import Select from "../atoms/select"
 import TextArea from "../atoms/textarea"
+import { getMunicipalitiesByState } from "../../services/municipalityService"
+import { sendFormData } from "../../services/serviceForm"
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -11,12 +13,27 @@ const ContactForm = () => {
     apellidos: "",
     email: "",
     telefono: "",
-    codigo_postal: "",
-    colonia: "",
     municipio: "",
     estado: "Chiapas",
     motivo: ""
   })
+
+  const [municipios, setMunicipios] = useState([])
+  const [loadingMunicipios, setLoadingMunicipios] = useState(true)
+  const [submitting, setSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState(null)
+
+  // Cargar municipios al montar el componente (stateId = 1 para Chiapas)
+  useEffect(() => {
+    const fetchMunicipios = async () => {
+      setLoadingMunicipios(true)
+      const data = await getMunicipalitiesByState(1)
+      setMunicipios(data)
+      setLoadingMunicipios(false)
+    }
+
+    fetchMunicipios()
+  }, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -24,12 +41,38 @@ const ContactForm = () => {
       ...prev,
       [name]: value
     }))
-    console.log(name,value)
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    setSubmitting(true)
+    setSubmitStatus(null)
 
+    const result = await sendFormData(formData)
+
+    if (result.success) {
+      setSubmitStatus({ type: 'success', message: 'Formulario enviado correctamente' })
+      // Limpiar formulario
+      setFormData({
+        comunidad: "",
+        otraComunidad: "",
+        nombre: "",
+        apellidos: "",
+        email: "",
+        telefono: "",
+        municipio: "",
+        estado: "Chiapas",
+        motivo: ""
+      })
+      // Ocultar mensaje después de 3 segundos
+      setTimeout(() => {
+        setSubmitStatus(null)
+      }, 3000)
+    } else {
+      setSubmitStatus({ type: 'error', message: 'Error al enviar el formulario. Intente nuevamente.' })
+    }
+
+    setSubmitting(false)
   }
 
   return (
@@ -107,31 +150,12 @@ const ContactForm = () => {
             onChange={handleChange}
           />
 
-          <Input
-            label="Código postal"
-            name="codigo_postal"
-            placeholder="30040"
-            required
-            className="w-full"
-            value={formData.codigo_postal}
-            onChange={handleChange}
-          />
-
-          <Select
-            label="Colonia"
-            name="colonia"
-            options={[]}
-            required
-            className="w-full"
-            value={formData.colonia}
-            onChange={handleChange}
-          />
-
           <Select
             label="Municipio"
             name="municipio"
-            options={[]}
+            options={municipios}
             required
+            placeholder={loadingMunicipios ? "Cargando..." : "Seleccionar municipio"}
             className="w-full"
             value={formData.municipio}
             onChange={handleChange}
@@ -162,13 +186,27 @@ const ContactForm = () => {
             />
           </div>
 
+          {/* Mensaje de estado */}
+          {submitStatus && (
+            <div className={`col-span-1 md:col-span-2 p-3 rounded-lg text-center ${
+              submitStatus.type === 'success'
+                ? 'bg-green-100 text-green-800'
+                : 'bg-red-100 text-red-800'
+            }`}>
+              {submitStatus.message}
+            </div>
+          )}
+
           {/* Botón */}
           <div className="col-span-1 md:col-span-2 flex justify-center md:justify-end">
             <button
               type="submit"
-              className="bg-pink-ia text-white px-8 md:px-10 py-3 rounded-lg text-lg md:text-xl font-bold transition-all duration-300 ease-in-out hover:bg-opacity-90 hover:scale-105 hover:shadow-xl flex items-center gap-3 w-full md:w-auto justify-center"
+              disabled={submitting}
+              className={`bg-pink-ia text-white px-8 md:px-10 py-3 rounded-lg text-lg md:text-xl font-bold transition-all duration-300 ease-in-out hover:bg-opacity-90 hover:scale-105 hover:shadow-xl flex items-center gap-3 w-full md:w-auto justify-center ${
+                submitting ? 'opacity-70 cursor-not-allowed' : ''
+              }`}
             >
-              Enviar
+              {submitting ? 'Enviando...' : 'Enviar'}
               <svg
                 className="w-5 h-5 md:w-6 md:h-6"
                 fill="none"
