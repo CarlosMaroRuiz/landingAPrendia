@@ -1,11 +1,9 @@
 import alfi from "../../../public/img/Alfi.png"
 import TitlePrimary from "../atoms/titlePrimary"
-import useParallax from "../../hooks/useParallax"
 import useInView from "../../hooks/useInView"
 import PrimaryButton from "../atoms/button"
 
 const IntroductionTemplate = () => {
-    const offsetY = useParallax(0.3)
     const [refImage, isImageInView] = useInView()
     const [refText, isTextInView] = useInView()
     const [refTitle, isTitleInView] = useInView()

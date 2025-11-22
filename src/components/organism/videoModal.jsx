@@ -38,15 +38,13 @@ const VideoModal = ({ isOpen, onClose }) => {
 
   return (
     <div
-      className={`fixed inset-0 z-[100] flex items-center justify-center transition-all duration-300 ${
-        isVisible ? 'bg-black/40' : 'bg-black/0'
-      }`}
+      className={`fixed inset-0 z-[100] flex items-center justify-center transition-all duration-300 ${isVisible ? 'bg-black/40' : 'bg-black/0'
+        }`}
       onClick={handleBackdropClick}
     >
       <div
-        className={`relative w-[80%] h-[90%] bg-white rounded-2xl overflow-hidden flex flex-col shadow-2xl transition-all duration-300 ${
-          isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-        }`}
+        className={`relative w-[90%] aspect-square md:w-[80%] md:h-[90%] md:aspect-auto bg-white rounded-2xl overflow-hidden flex flex-col shadow-2xl transition-all duration-300 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+          }`}
       >
         {/* Botón cerrar aún más arriba y en la esquina */}
         <button
