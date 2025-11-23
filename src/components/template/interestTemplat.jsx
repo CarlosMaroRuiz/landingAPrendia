@@ -25,7 +25,7 @@ const InterestTemplate = () => {
                     }`}
                     style={{ transitionDelay: '200ms' }}
                 >
-                    Regístrate para ponernos en contacto contigo y enviarte más información.
+                    Registrate para recibir más información de APREND<span className="text-pink-ia">IA</span>.
                 </p>
 
                 <div
