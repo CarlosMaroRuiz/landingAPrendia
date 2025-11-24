@@ -70,7 +70,8 @@ const VideoModal = ({ isOpen, onClose }) => {
         <div className="flex-1 p-6 pb-0">
           <iframe
             className="w-full h-full rounded-xl"
-            src="https://www.youtube.com/embed/kX77h7EpPOk?autoplay=1"
+           src="https://www.youtube.com/embed/6_DJSWGGiDw?autoplay=1"
+
             title="Video APRENDIA"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
