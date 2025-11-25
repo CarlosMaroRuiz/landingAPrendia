@@ -100,30 +100,33 @@ const IntroductionTemplate = () => {
                     initial={{ opacity: 0, x: 40, scale: 0.9, filter: "blur(4px)" }}
                     animate={isImageInView ? { opacity: 1, x: 0, scale: 1, filter: "blur(0px)" } : { opacity: 0, x: 40, scale: 0.9, filter: "blur(4px)" }}
                     transition={{ ...springGentle, delay: 0.25 }}
-                    style={{
-                        scale: isImageInView ? parallaxValues.imageScale : 0.9,
-                        opacity: isImageInView ? parallaxValues.imageOpacity : 0,
-                        y: parallaxValues.imageY,
-                        x: parallaxValues.imageX,
-                    }}
                 >
-                    <motion.img
-                        ref={refImage}
-                        src={alfi}
-                        alt="alfi"
-                        whileHover={{ scale: 1.05 }}
-                        transition={{ ...springGentle, duration: 0.4 }}
-                        className="
-                            image-3d-hover
-                            w-56 h-auto
-                            sm:w-auto sm:h-64
-                            md:w-auto md:h-72
-                            lg:w-auto lg:h-[80vh]
-                            xl:h-[85vh]
-                            rounded-lg cursor-pointer
-                            object-contain
-                        "
-                    />
+                    <motion.div
+                        style={{
+                            scale: parallaxValues.imageScale,
+                            opacity: parallaxValues.imageOpacity,
+                            y: parallaxValues.imageY,
+                            x: parallaxValues.imageX,
+                        }}
+                    >
+                        <motion.img
+                            ref={refImage}
+                            src={alfi}
+                            alt="alfi"
+                            whileHover={{ scale: 1.05 }}
+                            transition={{ ...springGentle, duration: 0.4 }}
+                            className="
+                                image-3d-hover
+                                w-56 h-auto
+                                sm:w-auto sm:h-64
+                                md:w-auto md:h-72
+                                lg:w-auto lg:h-[80vh]
+                                xl:h-[85vh]
+                                rounded-lg cursor-pointer
+                                object-contain
+                            "
+                        />
+                    </motion.div>
                 </motion.div>
 
             </motion.div>
