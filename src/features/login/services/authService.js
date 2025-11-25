@@ -14,7 +14,7 @@ const getApiUrl = (endpoint) => {
  */
 export const loginUser = async (username, password) => {
   try {
-    const response = await fetch(getApiUrl('/login'), {
+    const response = await fetch(getApiUrl('/auth/login'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
