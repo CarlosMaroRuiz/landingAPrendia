@@ -1,4 +1,13 @@
-import environment from '../../../common/iu/environment.js'
+/**
+ * Get API URL based on environment
+ */
+const getApiUrl = (endpoint) => {
+  // Use proxy during development, direct URL for production
+  if (import.meta.env.MODE === 'development') {
+    return `/api/form${endpoint}`;
+  }
+  return `${import.meta.env.VITE_API_SERVICES_FORM}${endpoint}`;
+};
 
 export const sendFormData = async (formData) => {
   try {
@@ -16,7 +25,7 @@ export const sendFormData = async (formData) => {
       porQueMeInteresa: formData.motivo
     }
 
-    const response = await fetch(`${environment.apiForm}/forms`, {
+    const response = await fetch(getApiUrl('/forms'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
