@@ -1,18 +1,21 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { LandingPage } from "../features/landing";
 import { LoginPage } from "../features/login";
 import { UsersPage } from "../features/gestion/iu/views/UsersPage";
 import { ProtectedRoute } from "./ProtectedRoute";
+import { logoutUser } from "../features/login/services/authService";
 
 const AppRoutes = () => {
+    const navigate = useNavigate();
+
     // Placeholder handlers for navigation and logout
     const handleNavigate = (section) => {
         console.log('Navigate to:', section);
     };
 
     const handleLogout = () => {
-        console.log('Logout');
-        // Add actual logout logic here
+        logoutUser();
+        navigate('/login');
     };
 
     return (
