@@ -8,9 +8,9 @@ const InputsForms = ({ formData = {}, onInputChange = () => {} }) => {
 
    return <section className="flex flex-col mt-12 gap-y-6">
           <TextInput
-             label="Correo Electrónico"
-             placeholder="Ingresa tu correo"
-             type="email"
+             label="Usuario"
+             placeholder="Ingresa tu usuario"
+             type="text"
              name="username"
              value={formData.username || ''}
              onChange={handleInputChange}

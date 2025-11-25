@@ -25,7 +25,9 @@ export const sendFormData = async (formData) => {
       porQueMeInteresa: formData.motivo
     }
 
-    const response = await fetch(getApiUrl('/forms'), {
+    const url = getApiUrl('/forms');
+
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -33,12 +35,18 @@ export const sendFormData = async (formData) => {
       body: JSON.stringify(payload)
     })
 
+    const responseText = await response.text();
+
     if (!response.ok) {
       throw new Error('Error al enviar formulario')
     }
 
-    const data = await response.json()
-    return { success: true, data }
+    try {
+      const data = JSON.parse(responseText);
+      return { success: true, data }
+    } catch {
+      throw new Error('Respuesta inválida del servidor');
+    }
   } catch (error) {
     console.error('Error en sendFormData:', error)
     return { success: false, error: error.message }
