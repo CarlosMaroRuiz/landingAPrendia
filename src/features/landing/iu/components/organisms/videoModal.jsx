@@ -38,21 +38,23 @@ const VideoModal = ({ isOpen, onClose }) => {
 
   return (
     <div
-      className={`fixed inset-0 z-[100] flex items-center justify-center transition-all duration-300 ${isVisible ? 'bg-black/40' : 'bg-black/0'
-        }`}
+      className={`fixed inset-0 z-[100] flex items-center justify-center transition-all duration-300 ${
+        isVisible ? 'bg-black/40' : 'bg-black/0'
+      }`}
       onClick={handleBackdropClick}
     >
       <div
-        className={`relative w-[90%] aspect-square md:w-[80%] md:h-[90%] md:aspect-auto bg-white rounded-2xl overflow-hidden flex flex-col shadow-2xl transition-all duration-300 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-          }`}
+        className={`relative w-[90%] aspect-square md:w-[80%] md:h-[90%] md:aspect-auto bg-white rounded-2xl overflow-hidden flex flex-col shadow-2xl transition-all duration-300 ${
+          isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+        }`}
       >
-        {/* Botón cerrar aún más arriba y en la esquina */}
+        {/* Botón cerrar más grande */}
         <button
           onClick={handleClose}
-          className="absolute top-1 right-1 z-10 w-6 h-6 bg-pink-ia text-white rounded-full hover:bg-opacity-90 transition-colors flex items-center justify-center"
+          className="absolute top-2 right-2 z-10 w-10 h-10 bg-pink-ia text-white rounded-full hover:bg-opacity-90 transition-colors flex items-center justify-center"
         >
           <svg
-            className="w-4 h-4"
+            className="w-6 h-6"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -67,11 +69,10 @@ const VideoModal = ({ isOpen, onClose }) => {
         </button>
 
         {/* Área del video */}
-        <div className="flex-1 p-6 pb-0">
+        <div className="flex-1 p-6 pb-0 pt-14">
           <iframe
             className="w-full h-full rounded-xl"
-           src="https://www.youtube.com/embed/6_DJSWGGiDw?autoplay=1"
-
+            src="https://www.youtube.com/embed/6_DJSWGGiDw?autoplay=1"
             title="Video APRENDIA"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -80,11 +81,11 @@ const VideoModal = ({ isOpen, onClose }) => {
         </div>
 
         {/* Línea de decoración */}
-        <div className="h-20 flex items-center justify-center border-t border-gray-100">
+        <div className="flex items-center justify-center border-t border-gray-100 my-1">
           <img
-            src="/img/decoracion.png"
+            src="/img/decoracion-ia.png"
             alt="Decoración"
-            className="h-12 object-contain"
+            className="h-22 object-contain"
           />
         </div>
       </div>
@@ -92,4 +93,4 @@ const VideoModal = ({ isOpen, onClose }) => {
   )
 }
 
-export default VideoModal
+export default VideoModal;

@@ -24,7 +24,7 @@ const IntroductionTemplate = () => {
         <section
             className="
                 flex flex-col items-center justify-center
-                py-2 sm:py-4 md:py-8
+                py-2 sm:py-4 md:py-0
                 min-h-fit
                 w-full
             ">
@@ -106,8 +106,8 @@ const IntroductionTemplate = () => {
                             w-56 h-auto
                             sm:w-auto sm:h-64
                             md:w-auto md:h-72
-                            lg:w-auto lg:h-[80vh]
-                            xl:h-[85vh]
+                            lg:w-auto lg:h-[86vh]
+                            xl:h-[79vh]
                             rounded-lg cursor-pointer
                             object-contain
                         "
