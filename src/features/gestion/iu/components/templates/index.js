@@ -1,0 +1,1 @@
+export { UsersManagementTemplate } from './UsersManagementTemplate';

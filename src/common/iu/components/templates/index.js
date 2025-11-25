@@ -1,0 +1,6 @@
+export { default as FeatureTemplate } from './featureTemplate'
+export { default as FooterTemplate } from './footerTemplat'
+export { default as InterestTemplate } from './interestTemplat'
+export { default as IntroductionTemplate } from './introductionTemplate'
+export { default as WhatIaTemplate } from './whatIaTemplate'
+export { default as DecoratedLayout } from '../decoratedLayout'

@@ -1,0 +1,356 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/forms": {
+      "post": {
+        "operationId": "FormsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFormDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Formulario creado exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FormResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos"
+          },
+          "429": {
+            "description": "Demasiadas peticiones"
+          }
+        },
+        "summary": "Crear un nuevo formulario de contacto",
+        "tags": [
+          "forms"
+        ]
+      },
+      "get": {
+        "operationId": "FormsController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Lista de formularios obtenida exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FormResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado"
+          },
+          "429": {
+            "description": "Demasiadas peticiones"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Obtener todos los formularios de contacto (Requiere autenticación)",
+        "tags": [
+          "forms"
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Forms Interested Parties Service",
+    "description": "API documentation for Forms Service",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [
+    {
+      "name": "forms",
+      "description": ""
+    },
+    {
+      "name": "auth",
+      "description": ""
+    }
+  ],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "CreateFormDto": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "description": "Nombre de la persona de contacto",
+            "example": "Victor",
+            "maxLength": 100
+          },
+          "apellidos": {
+            "type": "string",
+            "description": "Apellidos de la persona de contacto",
+            "example": "Perez Constantino",
+            "maxLength": 100
+          },
+          "numeroTelefono": {
+            "type": "string",
+            "description": "Número de teléfono",
+            "example": "9637894562",
+            "maxLength": 20
+          },
+          "email": {
+            "type": "string",
+            "description": "Correo electrónico",
+            "example": "villalobos@gmail.com",
+            "maxLength": 150
+          },
+          "calle": {
+            "type": "string",
+            "description": "Calle de la dirección",
+            "example": "Septima Oriente",
+            "maxLength": 200
+          },
+          "numeroExterior": {
+            "type": "string",
+            "description": "Número exterior",
+            "example": "0",
+            "maxLength": 10
+          },
+          "codigoPostal": {
+            "type": "string",
+            "description": "Código postal",
+            "example": "30040",
+            "maxLength": 10
+          },
+          "colonia": {
+            "type": "string",
+            "description": "Colonia",
+            "example": "Centro",
+            "maxLength": 100
+          },
+          "municipio": {
+            "type": "string",
+            "description": "Municipio",
+            "example": "Tuxtla Gutierrez",
+            "maxLength": 100
+          },
+          "estado": {
+            "type": "string",
+            "description": "Estado",
+            "example": "Chiapas",
+            "maxLength": 100
+          },
+          "porQueMeInteresa": {
+            "type": "string",
+            "description": "Razón por la que está interesado en APRENDIA",
+            "example": "Hola estoy interesado en la aplicación APRENDIA y quisiera que me contacten para recibir más información."
+          }
+        },
+        "required": [
+          "nombre",
+          "apellidos",
+          "numeroTelefono",
+          "email",
+          "calle",
+          "numeroExterior",
+          "codigoPostal",
+          "colonia",
+          "municipio",
+          "estado",
+          "porQueMeInteresa"
+        ]
+      },
+      "FormResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID único del formulario",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "nombre": {
+            "type": "string",
+            "description": "Nombre de la persona de contacto",
+            "example": "Victor"
+          },
+          "apellidos": {
+            "type": "string",
+            "description": "Apellidos de la persona de contacto",
+            "example": "Perez Constantino"
+          },
+          "numeroTelefono": {
+            "type": "string",
+            "description": "Número de teléfono",
+            "example": "9637894562"
+          },
+          "email": {
+            "type": "string",
+            "description": "Correo electrónico",
+            "example": "villalobos@gmail.com"
+          },
+          "calle": {
+            "type": "string",
+            "description": "Calle de la dirección",
+            "example": "Septima Oriente"
+          },
+          "numeroExterior": {
+            "type": "string",
+            "description": "Número exterior",
+            "example": "0"
+          },
+          "codigoPostal": {
+            "type": "string",
+            "description": "Código postal",
+            "example": "30040"
+          },
+          "colonia": {
+            "type": "string",
+            "description": "Colonia",
+            "example": "Centro"
+          },
+          "municipio": {
+            "type": "string",
+            "description": "Municipio",
+            "example": "Tuxtla Gutierrez"
+          },
+          "estado": {
+            "type": "string",
+            "description": "Estado",
+            "example": "Chiapas"
+          },
+          "porQueMeInteresa": {
+            "type": "string",
+            "description": "Razón por la que está interesado",
+            "example": "Hola estoy interesado en la aplicación APRENDIA"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Fecha de creación",
+            "example": "2025-01-21T10:30:00Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Fecha de última actualización",
+            "example": "2025-01-21T10:30:00Z"
+          }
+        },
+        "required": [
+          "id",
+          "nombre",
+          "apellidos",
+          "numeroTelefono",
+          "email",
+          "calle",
+          "numeroExterior",
+          "codigoPostal",
+          "colonia",
+          "municipio",
+          "estado",
+          "porQueMeInteresa",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "admin"
+          },
+          "password": {
+            "type": "string",
+            "example": "secret"
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ]
+      },
+      "UserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "1"
+          },
+          "username": {
+            "type": "string",
+            "example": "admin"
+          },
+          "roles": {
+            "example": [
+              "admin"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "username",
+          "roles"
+        ]
+      }
+    }
+  }
+}
