@@ -79,88 +79,84 @@ const FeatureCard = ({ feature, index, cardVariants, imageVariants, titleVariant
 const FeatureTemplate = () => {
     const [ref, isInView] = useInView()
     const springGentle = useSpringAnimation('gentle')
-    const springSnappy = useSpringAnimation('snappy')
-    const springBounce = useSpringAnimation('bounce')
 
-    // Variantes de animación tipo Duolingo
+    // Variantes de animación suave
     const cardVariants = {
         hidden: {
             opacity: 0,
-            scale: 0.75,
-            rotateX: -25,
-            y: 50,
-            filter: "blur(8px)",
+            scale: 0.9,
+            y: 30,
+            filter: "blur(4px)",
         },
         visible: (i) => ({
             opacity: 1,
             scale: 1,
-            rotateX: 0,
             y: 0,
             filter: "blur(0px)",
             transition: {
-                ...springBounce,
-                delay: 0.2 + i * 0.25,
+                ...springGentle,
+                delay: 0.2 + i * 0.15,
             },
         }),
         hover: {
-            scale: 1.02,
-            y: -8,
-            transition: { ...springSnappy, duration: 0.3 },
+            scale: 1.01,
+            y: -4,
+            transition: { ...springGentle, duration: 0.4 },
         },
     }
 
     const imageVariants = {
-        hidden: { opacity: 0, scale: 0.5, rotate: -20, y: 30, filter: "blur(6px)" },
+        hidden: { opacity: 0, scale: 0.85, rotate: -10, y: 20, filter: "blur(4px)" },
         visible: (i) => ({
             opacity: 1,
             scale: 1,
             rotate: 0,
             y: 0,
             filter: "blur(0px)",
-            transition: { ...springSnappy, delay: 0.35 + i * 0.25, duration: 0.7 },
+            transition: { ...springGentle, delay: 0.3 + i * 0.15, duration: 0.6 },
         }),
         hover: {
-            scale: 1.15,
-            rotate: 5,
-            transition: { ...springSnappy, duration: 0.4 },
+            scale: 1.05,
+            rotate: 2,
+            transition: { ...springGentle, duration: 0.4 },
         },
     }
 
     const textVariants = {
-        hidden: { opacity: 0, x: -40, y: 20, filter: "blur(4px)" },
+        hidden: { opacity: 0, x: -30, y: 15, filter: "blur(3px)" },
         visible: (i) => ({
             opacity: 1,
             x: 0,
             y: 0,
             filter: "blur(0px)",
-            transition: { ...springGentle, delay: 0.3 + i * 0.25 },
+            transition: { ...springGentle, delay: 0.25 + i * 0.15 },
         }),
     }
 
     const titleVariants = {
-        hidden: { opacity: 0, x: -30, y: 15, filter: "blur(4px)" },
+        hidden: { opacity: 0, x: -30, y: 15, filter: "blur(3px)" },
         visible: (i) => ({
             opacity: 1,
             x: 0,
             y: 0,
             filter: "blur(0px)",
-            transition: { ...springGentle, delay: 0.35 + i * 0.25 },
+            transition: { ...springGentle, delay: 0.3 + i * 0.15 },
         }),
         hover: {
-            x: 8,
+            x: 4,
             color: "#E91E8C",
-            transition: { ...springSnappy },
+            transition: { ...springGentle, duration: 0.3 },
         },
     }
 
     const paragraphVariants = {
-        hidden: { opacity: 0, x: -30, y: 15, filter: "blur(4px)" },
+        hidden: { opacity: 0, x: -30, y: 15, filter: "blur(3px)" },
         visible: (i) => ({
             opacity: 1,
             x: 0,
             y: 0,
             filter: "blur(0px)",
-            transition: { ...springGentle, delay: 0.45 + i * 0.25 },
+            transition: { ...springGentle, delay: 0.35 + i * 0.15 },
         }),
     }
 
@@ -175,7 +171,7 @@ const FeatureTemplate = () => {
                 <motion.h2
                     initial={{ opacity: 0, y: -20, scale: 0.9 }}
                     animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: -20, scale: 0.9 }}
-                    transition={{ ...springBounce, delay: 0.05 }}
+                    transition={{ ...springGentle, delay: 0.05 }}
                     className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl w-full text-pink-ia font-extrabold text-center flex flex-wrap justify-center mb-4"
                 >
                     Características
