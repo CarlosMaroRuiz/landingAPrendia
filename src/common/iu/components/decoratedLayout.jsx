@@ -1,4 +1,4 @@
-import decoracion from "../../../../public/img/decoracion.png"
+import decoracion from "/img/decoracion.png"
 
 const DecoratedLayout = ({ children }) => {
   return (

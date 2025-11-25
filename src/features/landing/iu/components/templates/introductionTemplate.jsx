@@ -3,12 +3,14 @@ import { TitlePrimary, Button } from "../../../../../common/iu/components"
 import { useInView } from "../../../../../common/iu/hooks"
 import { motion } from "framer-motion"
 import { useSpringAnimation } from "../../hooks/useSpringAnimation"
+import { useScrollParallax } from "../../hooks/useScrollParallax"
 
 const IntroductionTemplate = () => {
     const [refImage, isImageInView] = useInView()
     const [refText, isTextInView] = useInView()
     const [refTitle, isTitleInView] = useInView()
     const springGentle = useSpringAnimation('gentle')
+    const { ref: parallaxRef, parallaxValues } = useScrollParallax()
 
     const handleMeInteresa = () => {
         const element = document.getElementById('me-interesa')
@@ -21,19 +23,26 @@ const IntroductionTemplate = () => {
     }
 
     return (
-        <section className="
-            flex flex-col items-center justify-center
-            pt-4 sm:pt-2 md:pt-0
-            min-h-[50vh] sm:min-h-[60vh] md:min-h-[70vh] lg:min-h-[60vh]
-            w-full
-        ">
-
-            <div className="
-                flex flex-col-reverse sm:flex-row
-                justify-center items-center
-                gap-4 sm:gap-x-6 md:gap-x-8 lg:gap-x-12
-                w-full max-w-7xl mx-auto px-4
+        <section
+            ref={parallaxRef}
+            className="
+                flex flex-col items-center justify-center
+                pt-4 sm:pt-2 md:pt-0
+                min-h-[50vh] sm:min-h-[60vh] md:min-h-[70vh] lg:min-h-[60vh]
+                w-full
             ">
+
+            <motion.div
+                className="
+                    flex flex-col-reverse sm:flex-row
+                    justify-center items-center
+                    gap-4 sm:gap-x-6 md:gap-x-8 lg:gap-x-12
+                    w-full max-w-7xl mx-auto px-4
+                "
+                style={{
+                    opacity: parallaxValues.textOpacity
+                }}
+            >
 
                 {/* TEXT SECTION */}
                 <article className="
@@ -87,10 +96,15 @@ const IntroductionTemplate = () => {
 
                 {/* IMAGE */}
                 <motion.div
-                    className="w-full sm:w-[45%] md:w-[45%] lg:w-[40%] flex justify-center items-center"
+                    className="w-full sm:w-[45%] md:w-[45%] lg:w-[40%] flex justify-center items-center fixed sm:relative top-0 left-0 right-0 sm:top-auto sm:left-auto sm:right-auto pointer-events-none sm:pointer-events-auto"
                     initial={{ opacity: 0, x: 40, scale: 0.9, filter: "blur(4px)" }}
                     animate={isImageInView ? { opacity: 1, x: 0, scale: 1, filter: "blur(0px)" } : { opacity: 0, x: 40, scale: 0.9, filter: "blur(4px)" }}
                     transition={{ ...springGentle, delay: 0.25 }}
+                    style={{
+                        scale: parallaxValues.imageScale,
+                        opacity: parallaxValues.imageOpacity,
+                        y: parallaxValues.imageY,
+                    }}
                 >
                     <motion.img
                         ref={refImage}
@@ -111,7 +125,7 @@ const IntroductionTemplate = () => {
                     />
                 </motion.div>
 
-            </div>
+            </motion.div>
         </section>
     )
 }
