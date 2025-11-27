@@ -1,18 +1,10 @@
-/**
- * Get API URL based on environment
- */
-const getApiUrl = (endpoint) => {
-  // Use proxy during development, direct URL for production
-  if (import.meta.env.MODE === 'development') {
-    return `/api/core${endpoint}`;
-  }
-  return `${import.meta.env.VITE_API_CORE}${endpoint}`;
-};
-
 export const getMunicipalitiesByState = async (stateId) => {
   try {
-    // Use proxy route during development, direct URL for production
-    const apiUrl = getApiUrl(`/municipalities/state/${stateId}`)
+    const baseUrl = import.meta.env.MODE === 'development'
+      ? '/api'  // Use proxy in development
+      : import.meta.env.VITE_API_CORE
+
+    const apiUrl = `${baseUrl}/municipalities/state/${stateId}`
 
     const response = await fetch(apiUrl)
 
