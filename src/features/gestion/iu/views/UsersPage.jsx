@@ -55,7 +55,7 @@ export const UsersPage = () => {
     const token = localStorage.getItem('token');
     const baseUrl = import.meta.env.MODE === 'development'
       ? '/api'
-      : (import.meta.env.VITE_API_URL || '');
+      : (import.meta.env.VITE_API_SERVICES_FORM || '');
 
     workerRef.current.postMessage({
       action: 'START',
