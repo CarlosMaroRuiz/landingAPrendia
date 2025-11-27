@@ -1,8 +1,22 @@
-import { apiClient } from '../../../core/api/apiClient';
-
 export const getStats = async () => {
   try {
-    const data = await apiClient.get('/forms/stats');
+    const apiUrl = `${import.meta.env.VITE_API_SERVICES_FORM}/forms/stats`;
+    const token = localStorage.getItem('token');
+
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` })
+      }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error al obtener estadísticas');
+    }
+
+    const data = await response.json();
 
     return {
       totalRegistros: data.totalRegistros || 0,
@@ -25,7 +39,23 @@ export const getStats = async () => {
 
 export const getTopMunicipalities = async () => {
   try {
-    const data = await apiClient.get('/forms/top-municipalities');
+    const apiUrl = `${import.meta.env.VITE_API_SERVICES_FORM}/forms/top-municipalities`;
+    const token = localStorage.getItem('token');
+
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` })
+      }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error al obtener municipios');
+    }
+
+    const data = await response.json();
     const municipalities = Array.isArray(data) ? data : [];
 
     return {

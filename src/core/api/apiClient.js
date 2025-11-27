@@ -12,8 +12,7 @@ class ApiClient {
      * Determine the base URL based on the environment
      */
     getBaseUrl() {
-        const apiCore = import.meta.env.VITE_API_CORE || '';
-        return `${apiCore}/api`;
+        return import.meta.env.VITE_API_CORE || '';
     }
 
     /**
