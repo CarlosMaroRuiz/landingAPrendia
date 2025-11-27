@@ -5,7 +5,9 @@ export const getInteresados = async (params = {}) => {
     const token = localStorage.getItem('token');
 
     // Fetch from forms endpoint (this endpoint returns all forms)
-    const formsUrl = `${import.meta.env.VITE_API_SERVICES_FORM}/forms`;
+    const formsUrl = import.meta.env.MODE === 'development'
+      ? '/api/forms'
+      : `${import.meta.env.VITE_API_SERVICES_FORM}/forms`;
 
     const response = await fetch(formsUrl, {
       method: 'GET',
@@ -111,7 +113,9 @@ export const getInteresadoById = async (id) => {
   try {
     const token = localStorage.getItem('token');
 
-    const url = `${import.meta.env.VITE_API_SERVICES_FORM}/forms/${id}`;
+    const url = import.meta.env.MODE === 'development'
+      ? `/api/forms/${id}`
+      : `${import.meta.env.VITE_API_SERVICES_FORM}/forms/${id}`;
 
     const response = await fetch(url, {
       method: 'GET',
@@ -157,7 +161,9 @@ export const updateAttendedStatus = async (formId, atendido) => {
       throw new Error('No se encontró el token de autenticación');
     }
 
-    const url = `${import.meta.env.VITE_API_SERVICES_FORM}/forms/${formId}/atendido`;
+    const url = import.meta.env.MODE === 'development'
+      ? `/api/forms/${formId}/atendido`
+      : `${import.meta.env.VITE_API_SERVICES_FORM}/forms/${formId}/atendido`;
 
     console.log('Updating attended status:', { url, formId, atendido });
 

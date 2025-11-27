@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { Input, Select } from "../index"
 import TextArea from "../atoms/textarea"
-import Toast from "../atoms/Toast"
+import ModalMessage from "../molecules/modalMessage"
 import { getMunicipalitiesByState } from "../../../../features/landing/services/municipalityService"
 import { sendFormData } from "../../../../features/landing/services/serviceForm"
 
@@ -21,7 +21,9 @@ const ContactForm = () => {
   const [municipios, setMunicipios] = useState([])
   const [loadingMunicipios, setLoadingMunicipios] = useState(true)
   const [submitting, setSubmitting] = useState(false)
-  const [toast, setToast] = useState(null)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [modalMessage, setModalMessage] = useState('')
+  const [modalType, setModalType] = useState('success')
 
   useEffect(() => {
     const fetchMunicipios = async () => {
@@ -36,23 +38,32 @@ const ContactForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
+
+    // Validación para teléfono: solo números y máximo 10 dígitos
+    if (name === 'telefono') {
+      const onlyNumbers = value.replace(/\D/g, '')
+      const limitedNumbers = onlyNumbers.slice(0, 10)
+      setFormData(prev => ({
+        ...prev,
+        [name]: limitedNumbers
+      }))
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }))
+    }
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setSubmitting(true)
-    setToast(null)
 
     // Validar que al menos email o teléfono esté lleno
     if (!formData.email && !formData.telefono) {
-      setToast({
-        type: 'error',
-        message: 'Debe proporcionar al menos un email o número de teléfono para contactarlo.'
-      })
+      setModalMessage('Debe proporcionar al menos un email o número de teléfono para contactarlo.')
+      setModalType('error')
+      setModalOpen(true)
       setSubmitting(false)
       return
     }
@@ -60,7 +71,9 @@ const ContactForm = () => {
     const result = await sendFormData(formData)
 
     if (result.success) {
-      setToast({ type: 'success', message: 'Formulario enviado correctamente' })
+      setModalMessage('Formulario enviado correctamente')
+      setModalType('success')
+      setModalOpen(true)
       setFormData({
         comunidad: "",
         otraComunidad: "",
@@ -73,7 +86,9 @@ const ContactForm = () => {
         motivo: ""
       })
     } else {
-      setToast({ type: 'error', message: result.error || 'Error al enviar el formulario. Intente nuevamente.' })
+      setModalMessage(result.error || 'Error al enviar el formulario. Intente nuevamente.')
+      setModalType('error')
+      setModalOpen(true)
     }
 
     setSubmitting(false)
@@ -132,25 +147,34 @@ const ContactForm = () => {
             onChange={handleChange}
           />
 
-          <Input
-            label="Email *"
-            name="email"
-            type="email"
-            placeholder="ejemplo@gmail.com"
-            className="w-full"
-            value={formData.email}
-            onChange={handleChange}
-          />
-
-          <Input
-            label="Número de teléfono *"
-            name="telefono"
-            type="tel"
-            placeholder="961 123 4567"
-            className="w-full"
-            value={formData.telefono}
-            onChange={handleChange}
-          />
+    <Input
+  label="Correo electrónico"
+  name="email"
+  type="email"
+  placeholder="ejemplo@gmail.com"
+  className="w-full"
+  required
+  value={formData.email}
+  onChange={handleChange}
+/>
+          <div className="w-full">
+            <div className="flex justify-between items-center mb-1.5">
+              <label className="block text-base md:text-lg font-semibold text-gray-800">
+                Número de teléfono <span className="text-pink-ia">*</span>
+              </label>
+              <span className="text-sm text-gray-500">{formData.telefono.length}/10</span>
+            </div>
+            <input
+              type="tel"
+              name="telefono"
+              placeholder="1234567890"
+              maxLength="10"
+              required
+              value={formData.telefono}
+              onChange={handleChange}
+              className="w-full px-3 py-2 text-sm md:text-base border-2 border-gray-300 rounded-lg focus:outline-none focus:border-pink-ia transition-colors"
+            />
+          </div>
 
           <Select
             label="Municipio"
@@ -174,26 +198,18 @@ const ContactForm = () => {
           />
 
           <div className="col-span-1 md:col-span-2">
-            <TextArea
-              label="Por qué me interesa"
-              name="motivo"
-              placeholder="Hola estoy interesado en la aplicación APRENDIA  y quisiera que me contacten para recibir más información. "
-              required
-              rows={4}
-              className="w-full"
-              maxLength={200}
-              value={formData.motivo}
-              onChange={handleChange}
-            />
+          <TextArea
+  label="Por qué me interesa"
+  name="motivo"
+  placeholder="Hola, estoy interesado en la aplicación APRENDIA y quisiera que me contacten para recibir más información."
+  required
+  rows={4}
+  className="w-full"
+  maxLength={200}
+  value={formData.motivo}
+  onChange={handleChange}
+/>
           </div>
-
-          {toast && (
-            <Toast
-              type={toast.type}
-              message={toast.message}
-              onClose={() => setToast(null)}
-            />
-          )}
 
           <div className="col-span-1 md:col-span-2 flex justify-center md:justify-end">
             <button
@@ -209,6 +225,14 @@ const ContactForm = () => {
 
         </div>
       </div>
+
+      <ModalMessage
+        message={modalMessage}
+        type={modalType}
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        duration={modalType === 'success' ? 2000 : 3000}
+      />
     </form>
   )
 }

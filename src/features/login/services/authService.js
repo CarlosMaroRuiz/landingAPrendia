@@ -3,7 +3,9 @@
  */
 export const loginUser = async (username, password) => {
   try {
-    const url = `${import.meta.env.VITE_API_SERVICES_FORM}/auth/login`;
+    const url = import.meta.env.MODE === 'development'
+      ? '/api/auth/login'
+      : `${import.meta.env.VITE_API_SERVICES_FORM}/auth/login`;
 
     const response = await fetch(url, {
       method: 'POST',

@@ -9,14 +9,14 @@ const AppRoutes = () => {
     return (
         <Routes>
             <Route path="/" element={<LandingPage />} />
-            <Route path="/login" element={<LoginPage/>} />
+            <Route path="/login" element={<LoginPage />} />
 
             {/* Gestion routes with shared layout */}
             <Route
                 path="/gestion"
                 element={
                     <ProtectedRoute>
-                        <GestionLayout title="Gestión Interesados" breadcrumbs={['Inicio', 'Agregar', 'Usuarios']} />
+                        <GestionLayout title="Registros" />
                     </ProtectedRoute>
                 }
             >

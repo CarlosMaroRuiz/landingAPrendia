@@ -15,7 +15,7 @@ function LandingPage() {
         <>
             <VideoModal isOpen={isVideoModalOpen} onClose={() => setIsVideoModalOpen(false)} />
             <Header />
-            <main className="w-full px-4 sm:px-8 md:px-16 lg:px-20 xl:px-20 pt-20 sm:pt-24 md:pt-32 lg:pt-36">
+            <main className="w-full px-4 sm:px-8 md:px-16 lg:px-20 xl:px-20 pt-16 sm:pt-20 md:pt-20 lg:pt-20">
 
                 <IntroductionTemplate />
 

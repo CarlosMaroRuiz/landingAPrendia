@@ -20,7 +20,9 @@ export const sendFormData = async (formData) => {
       porQueMeInteresa: formData.motivo
     }
 
-    const url = `${import.meta.env.VITE_API_SERVICES_FORM}/forms`;
+    const url = import.meta.env.MODE === 'development'
+      ? '/api/forms'
+      : `${import.meta.env.VITE_API_SERVICES_FORM}/forms`;
 
     const response = await fetch(url, {
       method: 'POST',

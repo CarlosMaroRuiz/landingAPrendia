@@ -2,12 +2,11 @@ import { Outlet } from 'react-router-dom';
 import { Sidebar, Header } from '../components/organisms';
 import { useNavigate } from 'react-router-dom';
 import { logoutUser } from '../../../login/services/authService';
-
+import avatar from "/img/admin.png"
 export const GestionLayout = ({
   title = 'Gestión',
-  breadcrumbs = [],
+
   adminName = 'Admin',
-  adminEmail = 'admin@example.com',
   notificationCount = 0,
   onNotificationClick
 }) => {
@@ -32,11 +31,12 @@ export const GestionLayout = ({
         {/* Header */}
         <Header
           title={title}
-          breadcrumbs={breadcrumbs}
+        
           adminName={adminName}
-          adminEmail={adminEmail}
           notificationCount={notificationCount}
           onNotificationClick={onNotificationClick}
+          onLogout={handleLogout}
+          adminAvatar={avatar}
         />
 
         {/* Content Area - Outlet para las vistas */}

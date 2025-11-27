@@ -1,4 +1,5 @@
-import { UserCard, TableHeader } from '../molecules';
+import { useState } from 'react';
+import { UserCard, TableHeader, InterestModal } from '../molecules';
 import { Loading } from '../../../../../common/iu/components';
 import { UserNotFound } from '../atoms';
 
@@ -7,12 +8,20 @@ export const UsersTable = ({
   selectedUsers = [],
   onSelectUser,
   onViewUser,
+  onAttendedUpdate,
   isLoading = false,
   className = ''
 }) => {
+  const [interestModalOpen, setInterestModalOpen] = useState(false);
+  const [currentInterest, setCurrentInterest] = useState('');
 
-    const headers = [
-    'ID',
+  const handleViewInterest = (interest) => {
+    setCurrentInterest(interest);
+    setInterestModalOpen(true);
+  };
+
+  const headers = [
+
     'Nombre completo',
     'Email',
     'Teléfono',
@@ -20,17 +29,18 @@ export const UsersTable = ({
     'Comunidad perteneciente',
     'Interés',
     'Fecha de registro',
-    'Atendidos'
+    'Acciones'
   ];
+
   if (isLoading) {
     return (
-     <Loading/>
+      <Loading />
     );
   }
 
   if (users.length === 0) {
     return (
-   <UserNotFound/>
+      <UserNotFound />
     );
   }
 
@@ -38,20 +48,27 @@ export const UsersTable = ({
     <div className={`bg-white rounded-lg border border-gray-200 overflow-hidden ${className}`}>
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
-          <TableHeader headers={headers}/>
+          <TableHeader headers={headers} />
           <tbody>
             {users.map((user) => (
               <UserCard
                 key={user.id}
                 user={user}
                 onView={() => onViewUser?.(user.id)}
-                onSelect={() => onSelectUser?.(user.id)}
+                onSelect={onSelectUser}
+                onAttendedUpdate={onAttendedUpdate}
+                onViewInterest={handleViewInterest}
                 isSelected={selectedUsers.includes(user.id)}
               />
             ))}
           </tbody>
         </table>
       </div>
+      <InterestModal
+        isOpen={interestModalOpen}
+        onClose={() => setInterestModalOpen(false)}
+        content={currentInterest}
+      />
     </div>
   );
 };

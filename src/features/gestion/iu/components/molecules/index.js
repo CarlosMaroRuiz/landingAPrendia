@@ -8,7 +8,5 @@ export { TableHeader } from './TableHeader';
 export { SearchBar } from './SearchBar';
 export { ProfileWidget } from './ProfileWidget';
 export { ComunitySelectors } from './comunitySelector';
-
-
-
- 
+export { InterestModal } from './InterestModal';
+export { AttendedModal } from './AttendedModal';

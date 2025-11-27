@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { SearchBar, Pagination } from '../components/molecules';
 import { UsersTable, ModalGestion } from '../components/organisms';
 import { useFilters } from '../hooks';
-import { getInteresados } from '../../services/gestionService';
+import { getInteresados, updateAttendedStatus } from '../../services/gestionService';
 
 export const UsersPage = () => {
   const [users, setUsers] = useState([]);
@@ -74,7 +74,50 @@ export const UsersPage = () => {
     );
   };
 
-  const resultsPerPage = 7;
+  const handleAttendedUpdate = async (userId, attended) => {
+    try {
+      const result = await updateAttendedStatus(userId, attended);
+
+      if (result.success) {
+        console.log('Estado actualizado exitosamente:', result.data);
+        // Refresh the data to show updated status
+        const fetchData = async () => {
+          setIsLoading(true);
+          try {
+            const result = await getInteresados({
+              page: currentPage,
+              search: searchValue,
+              community: filters.community,
+              municipality: filters.municipality
+            });
+
+            if (result.error) {
+              setUsers([]);
+              setTotalResults(0);
+            } else {
+              setUsers(result.data || []);
+              setTotalResults(result.total || 0);
+            }
+          } catch (err) {
+            console.error('Error fetching users:', err);
+            setUsers([]);
+            setTotalResults(0);
+          } finally {
+            setIsLoading(false);
+          }
+        };
+        await fetchData();
+      } else {
+        console.error('Error al actualizar estado:', result.error);
+        alert(`Error: ${result.error}`);
+      }
+    } catch (error) {
+      console.error('Error updating attended status:', error);
+      alert('Error al actualizar el estado de atendido');
+    }
+  };
+
+  const resultsPerPage = 10;
   const totalPages = Math.ceil(totalResults / resultsPerPage);
 
   return (
@@ -92,6 +135,7 @@ export const UsersPage = () => {
         users={users}
         selectedUsers={selectedUsers}
         onSelectUser={handleSelectUser}
+        onAttendedUpdate={handleAttendedUpdate}
         isLoading={isLoading}
       />
 

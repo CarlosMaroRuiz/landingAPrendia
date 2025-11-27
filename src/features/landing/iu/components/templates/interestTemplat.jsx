@@ -28,7 +28,7 @@ const InterestTemplate = () => {
                     transition={{ ...springGentle, delay: 0.18 }}
                     className="text-sm sm:text-base md:text-xl lg:text-2xl w-full text-center mt-4 px-2"
                 >
-                    Registrate para recibir más información de APREND<span className="text-pink-ia">IA</span>.
+                    Regístrate para recibir más información de APREND<span className="text-pink-ia">IA</span>.
                 </motion.p>
 
                 <motion.div

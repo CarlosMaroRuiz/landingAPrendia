@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PrimaryButton from "../../../../../common/iu/components/atoms/button"
+import ModalMessage from "../../../../../common/iu/components/molecules/modalMessage"
 import {ForgotPassword, TitleLogin} from "../molecules"
 import { InputsForm } from "../organisms"
 import { loginUser } from "../../../services"
@@ -8,21 +9,23 @@ import { loginUser } from "../../../services"
 const FormLogin = () => {
   const [formData, setFormData] = useState({ username: '', password: '' });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [modalType, setModalType] = useState('success');
   const navigate = useNavigate();
 
   const handleInputChange = (data) => {
     setFormData(data);
-    setError(null);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
 
     if (!formData.username || !formData.password) {
-      setError('Por favor completa todos los campos');
+      setModalMessage('Por favor completa todos los campos');
+      setModalType('error');
+      setModalOpen(true);
       setLoading(false);
       return;
     }
@@ -30,31 +33,43 @@ const FormLogin = () => {
     const result = await loginUser(formData.username, formData.password);
 
     if (result.success) {
-      navigate('/gestion');
+      setModalMessage('¡Inicio de sesión exitoso!');
+      setModalType('success');
+      setModalOpen(true);
+      setTimeout(() => {
+        navigate('/gestion');
+      }, 1500);
     } else {
-      setError(result.error || 'Error al iniciar sesión');
+      setModalMessage(result.error || 'Error al iniciar sesión');
+      setModalType('error');
+      setModalOpen(true);
     }
 
     setLoading(false);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-[#FFFFFF] border border-[#E5E7EB] rounded-xl py-8 sm:py-10 px-6 sm:px-11 w-full">
-      <TitleLogin/>
-      <InputsForm formData={formData} onInputChange={handleInputChange} />
-      <ForgotPassword/>
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 mt-4 text-sm">
-          {error}
-        </div>
-      )}
-      <PrimaryButton
-        text={loading ? "Iniciando..." : "Iniciar Sesión"}
-        className={"w-full py-2 sm:py-3 text-sm"}
-        disabled={loading}
-        type="submit"
+    <>
+      <form onSubmit={handleSubmit} className="bg-[#FFFFFF] border border-[#E5E7EB] rounded-xl py-8 sm:py-10 px-6 sm:px-11 w-full ">
+        <TitleLogin/>
+        <InputsForm formData={formData} onInputChange={handleInputChange} />
+
+        <PrimaryButton
+          text={loading ? "Iniciando..." : "Iniciar Sesión"}
+          className={"w-full py-2 sm:py-3 text-sm mt-19"}
+          disabled={loading}
+          type="submit"
+        />
+      </form>
+
+      <ModalMessage
+        message={modalMessage}
+        type={modalType}
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        duration={modalType === 'success' ? 1500 : 3000}
       />
-    </form>
+    </>
   );
 }
 
