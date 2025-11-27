@@ -138,7 +138,7 @@ const ContactForm = () => {
         <Select
           label="Comunidad a la que pertenece el beneficiario"
           name="comunidad"
-          options={["CAM", "USAER", "PARTICULAR", "ADAS", "ASODECH", "OTROS"]}
+          options={["CAM", "USAER", "PARTICULAR", "ADAS", "ASODECH","CONEXSOR", "OTROS",]}
           required
           placeholder="Seleccionar comunidad"
           className="w-full"
