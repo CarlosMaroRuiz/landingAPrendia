@@ -1,25 +1,11 @@
+import { apiClient } from '../../../core/api/apiClient';
+
 export const getInteresados = async (params = {}) => {
   const { page = 1, search = '', community = '', municipality = '' } = params;
 
   try {
     // Fetch from forms endpoint
-    const apiUrl = `${import.meta.env.VITE_API_SERVICES_FORM}/forms`;
-    const token = localStorage.getItem('token');
-
-    const response = await fetch(apiUrl, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token && { 'Authorization': `Bearer ${token}` })
-      }
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Error al obtener interesados');
-    }
-
-    const data = await response.json();
+    const data = await apiClient.get('/forms');
 
     const forms = Array.isArray(data) ? data : data.data || [];
 
@@ -111,23 +97,7 @@ export const getInteresados = async (params = {}) => {
  */
 export const getInteresadoById = async (id) => {
   try {
-    const apiUrl = `${import.meta.env.VITE_API_SERVICES_FORM}/forms/${id}`;
-    const token = localStorage.getItem('token');
-
-    const response = await fetch(apiUrl, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token && { 'Authorization': `Bearer ${token}` })
-      }
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Error al obtener interesado');
-    }
-
-    const form = await response.json();
+    const form = await apiClient.get(`/forms/${id}`);
 
     // Map to table format
     return {
@@ -154,24 +124,7 @@ export const getInteresadoById = async (id) => {
  */
 export const updateAttendedStatus = async (formId, atendido) => {
   try {
-    const apiUrl = `${import.meta.env.VITE_API_SERVICES_FORM}/forms/${formId}/atendido`;
-    const token = localStorage.getItem('token');
-
-    const response = await fetch(apiUrl, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token && { 'Authorization': `Bearer ${token}` })
-      },
-      body: JSON.stringify({ atendido })
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Error al actualizar estado');
-    }
-
-    const data = await response.json();
+    const data = await apiClient.patch(`/forms/${formId}/atendido`, { atendido });
 
     return {
       success: true,

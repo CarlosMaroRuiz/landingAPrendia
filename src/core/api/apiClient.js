@@ -5,13 +5,22 @@ import { formatValidationMessage } from '../utils/errorFormatter';
  */
 class ApiClient {
     constructor() {
+        this.isDevelopment = import.meta.env.VITE_MODE === 'development';
         this.baseUrl = this.getBaseUrl();
     }
 
     /**
      * Determine the base URL based on the environment
+     * In development: uses proxy routes (/api, /api2)
+     * In production: uses direct URLs from environment variables
      */
     getBaseUrl() {
+        // In development, use proxy routes
+        if (this.isDevelopment) {
+            return '/api2';
+        }
+
+        // In production, use the actual API URL
         return import.meta.env.VITE_API_SERVICES_FORM || '';
     }
 
