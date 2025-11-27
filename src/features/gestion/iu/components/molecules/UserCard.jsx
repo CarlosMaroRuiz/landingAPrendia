@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { Badge } from '../atoms';
-import { EyeIcon } from '@heroicons/react/24/outline';
+import { EyeIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { AttendedModal } from './AttendedModal';
 
 export const UserCard = ({ user, onView, onSelect, onAttendedUpdate, onViewInterest, isSelected }) => {
@@ -10,6 +10,11 @@ export const UserCard = ({ user, onView, onSelect, onAttendedUpdate, onViewInter
 
   const handleActionClick = (e) => {
     e.stopPropagation();
+
+    // If already attended, do not show the modal
+    if (user.atendido) {
+      return;
+    }
 
     if (buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
@@ -27,7 +32,6 @@ export const UserCard = ({ user, onView, onSelect, onAttendedUpdate, onViewInter
   };
 
   const handleModalAccept = (attended) => {
-    console.log('User attended:', attended, 'User ID:', user.id);
     // Call the onAttendedUpdate callback with user ID and attended status
     onAttendedUpdate?.(user.id, attended);
     setShowModal(false);
@@ -36,6 +40,7 @@ export const UserCard = ({ user, onView, onSelect, onAttendedUpdate, onViewInter
   return (
     <>
       <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+
         <td className="px-3 py-2">
           <div className="flex flex-col">
             <p className="font-medium text-xs text-gray-900">{user.name}</p>
@@ -71,9 +76,13 @@ export const UserCard = ({ user, onView, onSelect, onAttendedUpdate, onViewInter
             ref={buttonRef}
             onClick={handleActionClick}
             className="inline-flex items-center justify-center hover:opacity-70 transition-opacity"
-            title="Ver detalles"
+            title={user.atendido ? "Atendido" : "Ver detalles"}
           >
-            <img src="/img/carpeta.png" alt="Ver detalles" className="h-5 w-5" />
+            {user.atendido ? (
+              <CheckCircleIcon className="h-6 w-6 text-green-500" />
+            ) : (
+              <img src="/img/carpeta.png" alt="Ver detalles" className="h-5 w-5" />
+            )}
           </button>
         </td>
       </tr>

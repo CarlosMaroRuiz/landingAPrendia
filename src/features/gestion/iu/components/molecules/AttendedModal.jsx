@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 
 export const AttendedModal = ({ isOpen, onClose, onAccept, position }) => {
@@ -30,7 +31,7 @@ export const AttendedModal = ({ isOpen, onClose, onAccept, position }) => {
         }
     };
 
-    return (
+    const modalContent = (
         <div
             ref={modalRef}
             className="absolute bg-white rounded-lg shadow-xl border-2 border-gray-200 p-4 z-50 w-48"
@@ -60,8 +61,8 @@ export const AttendedModal = ({ isOpen, onClose, onAccept, position }) => {
                     <div
                         onClick={() => setAttended(true)}
                         className={`w-8 h-8 rounded-full border-4 flex items-center justify-center transition-all ${attended === true
-                                ? 'border-pink-ia bg-white'
-                                : 'border-gray-300 bg-white'
+                            ? 'border-pink-ia bg-white'
+                            : 'border-gray-300 bg-white'
                             }`}
                     >
                         {attended === true && (
@@ -76,8 +77,8 @@ export const AttendedModal = ({ isOpen, onClose, onAccept, position }) => {
                     <div
                         onClick={() => setAttended(false)}
                         className={`w-8 h-8 rounded-full border-4 flex items-center justify-center transition-all ${attended === false
-                                ? 'border-pink-ia bg-white'
-                                : 'border-gray-300 bg-white'
+                            ? 'border-pink-ia bg-white'
+                            : 'border-gray-300 bg-white'
                             }`}
                     >
                         {attended === false && (
@@ -92,12 +93,14 @@ export const AttendedModal = ({ isOpen, onClose, onAccept, position }) => {
                 onClick={handleAccept}
                 disabled={attended === null}
                 className={`w-full py-2 rounded-lg font-semibold text-white text-sm transition-all ${attended === null
-                        ? 'bg-gray-300 cursor-not-allowed'
-                        : 'bg-pink-ia hover:bg-pink-ia/90'
+                    ? 'bg-gray-300 cursor-not-allowed'
+                    : 'bg-pink-ia hover:bg-pink-ia/90'
                     }`}
             >
                 Aceptar
             </button>
         </div>
     );
+
+    return createPortal(modalContent, document.body);
 };

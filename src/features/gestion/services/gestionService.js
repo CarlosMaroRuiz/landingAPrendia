@@ -1,27 +1,14 @@
+import { apiClient } from '../../../core/api/apiClient';
+
 export const getInteresados = async (params = {}) => {
   const { page = 1, search = '', community = '', municipality = '' } = params;
 
   try {
-    const token = localStorage.getItem('token');
+    // Fetch from forms endpoint
+    // apiClient handles the base URL (/api in dev, VITE_API_URL in prod)
+    // and the Authorization header automatically
+    const data = await apiClient.get('/forms');
 
-    // Fetch from forms endpoint (this endpoint returns all forms)
-    const formsUrl = import.meta.env.MODE === 'development'
-      ? '/api/forms'
-      : `${import.meta.env.VITE_API_SERVICES_FORM}/forms`;
-
-    const response = await fetch(formsUrl, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token && { Authorization: `Bearer ${token}` })
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.statusText}`);
-    }
-
-    const data = await response.json();
     const forms = Array.isArray(data) ? data : data.data || [];
 
     // Map API response to table format
@@ -36,7 +23,8 @@ export const getInteresados = async (params = {}) => {
       community: form.comunidadPerteneciente || form.colonia || '',
       registrationDate: form.createdAt ? new Date(form.createdAt).toLocaleDateString() : '',
       postalCode: form.codigoPostal || '',
-      interest: form.porQueMeInteresa || ''
+      interest: form.porQueMeInteresa || '',
+      atendido: form.atendido === true || form.atendido === 'true'
     }));
 
     // Apply filters
@@ -111,25 +99,7 @@ export const getInteresados = async (params = {}) => {
  */
 export const getInteresadoById = async (id) => {
   try {
-    const token = localStorage.getItem('token');
-
-    const url = import.meta.env.MODE === 'development'
-      ? `/api/forms/${id}`
-      : `${import.meta.env.VITE_API_SERVICES_FORM}/forms/${id}`;
-
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token && { Authorization: `Bearer ${token}` })
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.statusText}`);
-    }
-
-    const form = await response.json();
+    const form = await apiClient.get(`/forms/${id}`);
 
     // Map to table format
     return {
@@ -142,7 +112,8 @@ export const getInteresadoById = async (id) => {
       community: form.colonia || '',
       registrationDate: form.createdAt ? new Date(form.createdAt).toLocaleDateString() : '',
       postalCode: form.codigoPostal || '',
-      interest: form.porQueMeInteresa || ''
+      interest: form.porQueMeInteresa || '',
+      atendido: form.atendido === true || form.atendido === 'true'
     };
   } catch (error) {
     console.error('Error fetching interesado:', error);
@@ -155,42 +126,8 @@ export const getInteresadoById = async (id) => {
  */
 export const updateAttendedStatus = async (formId, atendido) => {
   try {
-    const token = localStorage.getItem('token');
+    const data = await apiClient.patch(`/forms/${formId}/atendido`, { atendido });
 
-    if (!token) {
-      throw new Error('No se encontró el token de autenticación');
-    }
-
-    const url = import.meta.env.MODE === 'development'
-      ? `/api/forms/${formId}/atendido`
-      : `${import.meta.env.VITE_API_SERVICES_FORM}/forms/${formId}/atendido`;
-
-    console.log('Updating attended status:', { url, formId, atendido });
-
-    const response = await fetch(url, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify({ atendido })
-    });
-
-    if (!response.ok) {
-      let errorMessage = `Error ${response.status}: ${response.statusText}`;
-
-      try {
-        const errorData = await response.json();
-        errorMessage = errorData.message || errorData.error || errorMessage;
-      } catch (e) {
-        // If response is not JSON, use the status text
-        console.error('Error parsing error response:', e);
-      }
-
-      throw new Error(errorMessage);
-    }
-
-    const data = await response.json();
     return {
       success: true,
       data

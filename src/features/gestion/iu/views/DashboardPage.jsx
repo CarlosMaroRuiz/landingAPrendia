@@ -1,36 +1,35 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { CardsDash, ChartDash } from "../components/organisms";
+import { useAsync } from '../../../../common/iu/hooks';
 import { getStats, getTopMunicipalities } from '../../services/dashboardService';
 
 export const DashboardPage = () => {
-  const [stats, setStats] = useState({
-    totalRegistros: 0,
-    registrosAtendidos: 0,
-    registrosNoAtendidos: 0
-  });
-  const [municipalitiesData, setMunicipalitiesData] = useState([]);
+  // Use useAsync for fetching stats
+  const {
+    execute: fetchStats,
+    data: statsData
+  } = useAsync(getStats);
+
+  // Use useAsync for fetching top municipalities
+  const {
+    execute: fetchMunicipalities,
+    data: municipalitiesData
+  } = useAsync(getTopMunicipalities);
 
   useEffect(() => {
-    const fetchData = async () => {
-      // Fetch stats
-      const statsData = await getStats();
-      if (statsData.success) {
-        setStats({
-          totalRegistros: statsData.totalRegistros,
-          registrosAtendidos: statsData.registrosAtendidos,
-          registrosNoAtendidos: statsData.registrosNoAtendidos
-        });
-      }
+    fetchStats();
+    fetchMunicipalities();
+  }, [fetchStats, fetchMunicipalities]);
 
-      // Fetch top municipalities
-      const municipalitiesResponse = await getTopMunicipalities();
-      if (municipalitiesResponse.success && municipalitiesResponse.data.length > 0) {
-        setMunicipalitiesData(municipalitiesResponse.data);
-      }
-    };
+  // Extract stats with defaults
+  const stats = {
+    totalRegistros: statsData?.totalRegistros || 0,
+    registrosAtendidos: statsData?.registrosAtendidos || 0,
+    registrosNoAtendidos: statsData?.registrosNoAtendidos || 0
+  };
 
-    fetchData();
-  }, []);
+  // Extract municipalities data
+  const municipalities = municipalitiesData?.data || [];
 
   return (
     <div className="flex w-full flex-col gap-6">
@@ -39,7 +38,7 @@ export const DashboardPage = () => {
         registrosAtendidos={stats.registrosAtendidos}
         registrosNoAtendidos={stats.registrosNoAtendidos}
       />
-      <ChartDash municipalitiesData={municipalitiesData} />
+      <ChartDash municipalitiesData={municipalities} />
     </div>
   );
 };

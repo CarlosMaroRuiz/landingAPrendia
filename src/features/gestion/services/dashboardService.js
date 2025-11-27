@@ -1,23 +1,8 @@
+import { apiClient } from '../../../core/api/apiClient';
+
 export const getStats = async () => {
   try {
-    const url = import.meta.env.MODE === 'development'
-      ? '/api/forms/stats'
-      : `${import.meta.env.VITE_API_SERVICES_FORM}/forms/stats`;
-    const token = localStorage.getItem('token');
-
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token && { Authorization: `Bearer ${token}` })
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status}`);
-    }
-
-    const data = await response.json();
+    const data = await apiClient.get('/forms/stats');
 
     return {
       totalRegistros: data.totalRegistros || 0,
@@ -40,24 +25,7 @@ export const getStats = async () => {
 
 export const getTopMunicipalities = async () => {
   try {
-    const url = import.meta.env.MODE === 'development'
-      ? '/api/forms/top-municipalities'
-      : `${import.meta.env.VITE_API_SERVICES_FORM}/forms/top-municipalities`;
-    const token = localStorage.getItem('token');
-
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token && { Authorization: `Bearer ${token}` })
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status}`);
-    }
-
-    const data = await response.json();
+    const data = await apiClient.get('/forms/top-municipalities');
     const municipalities = Array.isArray(data) ? data : [];
 
     return {

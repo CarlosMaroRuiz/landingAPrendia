@@ -1,14 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { SearchBar, Pagination } from '../components/molecules';
 import { UsersTable, ModalGestion } from '../components/organisms';
 import { useFilters } from '../hooks';
+import { useAsync } from '../../../../common/iu/hooks';
 import { getInteresados, updateAttendedStatus } from '../../services/gestionService';
 
 export const UsersPage = () => {
-  const [users, setUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
   const [totalResults, setTotalResults] = useState(0);
 
   const {
@@ -22,37 +21,41 @@ export const UsersPage = () => {
     resetFilters
   } = useFilters({});
 
+  // Use useAsync for fetching users
+  const {
+    execute: fetchUsers,
+    data: usersData,
+    loading: isLoading,
+    error: fetchError
+  } = useAsync(getInteresados);
+
+  // Use useAsync for updating status
+  const { execute: updateStatus } = useAsync(updateAttendedStatus);
+
+  const loadUsers = useCallback(async () => {
+    try {
+      const result = await fetchUsers({
+        page: currentPage,
+        search: searchValue,
+        community: filters.community,
+        municipality: filters.municipality
+      });
+
+      if (result.error) {
+        setTotalResults(0);
+      } else {
+        setTotalResults(result.total || 0);
+      }
+    } catch (err) {
+      console.error('Error fetching users:', err);
+      setTotalResults(0);
+    }
+  }, [fetchUsers, currentPage, searchValue, filters.community, filters.municipality]);
+
   // Fetch data from API with pagination, search, and filters
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-
-      try {
-        const result = await getInteresados({
-          page: currentPage,
-          search: searchValue,
-          community: filters.community,
-          municipality: filters.municipality
-        });
-
-        if (result.error) {
-          setUsers([]);
-          setTotalResults(0);
-        } else {
-          setUsers(result.data || []);
-          setTotalResults(result.total || 0);
-        }
-      } catch (err) {
-        console.error('Error fetching users:', err);
-        setUsers([]);
-        setTotalResults(0);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [currentPage, searchValue, filters.community, filters.municipality]);
+    loadUsers();
+  }, [loadUsers]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -76,37 +79,13 @@ export const UsersPage = () => {
 
   const handleAttendedUpdate = async (userId, attended) => {
     try {
-      const result = await updateAttendedStatus(userId, attended);
+      const result = await updateStatus(userId, attended);
 
       if (result.success) {
-        console.log('Estado actualizado exitosamente:', result.data);
         // Refresh the data to show updated status
-        const fetchData = async () => {
-          setIsLoading(true);
-          try {
-            const result = await getInteresados({
-              page: currentPage,
-              search: searchValue,
-              community: filters.community,
-              municipality: filters.municipality
-            });
-
-            if (result.error) {
-              setUsers([]);
-              setTotalResults(0);
-            } else {
-              setUsers(result.data || []);
-              setTotalResults(result.total || 0);
-            }
-          } catch (err) {
-            console.error('Error fetching users:', err);
-            setUsers([]);
-            setTotalResults(0);
-          } finally {
-            setIsLoading(false);
-          }
-        };
-        await fetchData();
+        setTimeout(() => {
+          loadUsers();
+        }, 500);
       } else {
         console.error('Error al actualizar estado:', result.error);
         alert(`Error: ${result.error}`);
@@ -119,6 +98,9 @@ export const UsersPage = () => {
 
   const resultsPerPage = 10;
   const totalPages = Math.ceil(totalResults / resultsPerPage);
+
+  // Extract users from data structure
+  const users = usersData?.data || [];
 
   return (
     <>

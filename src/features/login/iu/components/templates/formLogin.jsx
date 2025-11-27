@@ -2,17 +2,20 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PrimaryButton from "../../../../../common/iu/components/atoms/button"
 import ModalMessage from "../../../../../common/iu/components/molecules/modalMessage"
-import {ForgotPassword, TitleLogin} from "../molecules"
+import { ForgotPassword, TitleLogin } from "../molecules"
 import { InputsForm } from "../organisms"
+import { useAsync } from '../../../../../common/iu/hooks';
 import { loginUser } from "../../../services"
 
 const FormLogin = () => {
   const [formData, setFormData] = useState({ username: '', password: '' });
-  const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [modalType, setModalType] = useState('success');
   const navigate = useNavigate();
+
+  // Use useAsync for login
+  const { execute: login, loading } = useAsync(loginUser);
 
   const handleInputChange = (data) => {
     setFormData(data);
@@ -20,38 +23,40 @@ const FormLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
 
     if (!formData.username || !formData.password) {
       setModalMessage('Por favor completa todos los campos');
       setModalType('error');
       setModalOpen(true);
-      setLoading(false);
       return;
     }
 
-    const result = await loginUser(formData.username, formData.password);
+    try {
+      const result = await login(formData.username, formData.password);
 
-    if (result.success) {
-      setModalMessage('¡Inicio de sesión exitoso!');
-      setModalType('success');
-      setModalOpen(true);
-      setTimeout(() => {
-        navigate('/gestion');
-      }, 1500);
-    } else {
-      setModalMessage(result.error || 'Error al iniciar sesión');
+      if (result.success) {
+        setModalMessage('¡Inicio de sesión exitoso!');
+        setModalType('success');
+        setModalOpen(true);
+        setTimeout(() => {
+          navigate('/gestion');
+        }, 1500);
+      } else {
+        setModalMessage(result.error || 'Error al iniciar sesión');
+        setModalType('error');
+        setModalOpen(true);
+      }
+    } catch (error) {
+      setModalMessage('Error al iniciar sesión');
       setModalType('error');
       setModalOpen(true);
     }
-
-    setLoading(false);
   };
 
   return (
     <>
       <form onSubmit={handleSubmit} className="bg-[#FFFFFF] border border-[#E5E7EB] rounded-xl py-8 sm:py-10 px-6 sm:px-11 w-full ">
-        <TitleLogin/>
+        <TitleLogin />
         <InputsForm formData={formData} onInputChange={handleInputChange} />
 
         <PrimaryButton
