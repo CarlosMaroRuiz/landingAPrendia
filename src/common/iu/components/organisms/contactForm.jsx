@@ -39,8 +39,25 @@ const ContactForm = () => {
   const handleChange = (e) => {
     const { name, value } = e.target
 
+    // Validación para nombre y apellidos: solo letras españolas, espacios y acentos
+    if (name === 'nombre' || name === 'apellidos') {
+      // Elimina números y caracteres especiales no permitidos (_,@,/,-,#, etc.)
+      // Solo acepta letras (incluyendo acentos y ñ) y espacios
+      let filtered = value.replace(/[^a-záéíóúñA-ZÁÉÍÓÚÑ\s]/g, '')
+
+      // Capitaliza la primera letra y cada palabra después de espacio
+      filtered = filtered.split(' ').map(word => {
+        if (word.length === 0) return word
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+      }).join(' ')
+
+      setFormData(prev => ({
+        ...prev,
+        [name]: filtered
+      }))
+    }
     // Validación para teléfono: solo números y máximo 10 dígitos
-    if (name === 'telefono') {
+    else if (name === 'telefono') {
       const onlyNumbers = value.replace(/\D/g, '')
       const limitedNumbers = onlyNumbers.slice(0, 10)
       setFormData(prev => ({
@@ -55,6 +72,17 @@ const ContactForm = () => {
     }
   }
 
+  const validateEmail = (email) => {
+    // Validación de email: no permitir .@, solo @, o dominios inválidos
+    if (!email) return true // Si está vacío, lo validamos después
+
+    // Regex para validar email correctamente
+    // No permite punto al inicio, requiere usuario@dominio.extension
+    const emailRegex = /^[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+
+    return emailRegex.test(email)
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setSubmitting(true)
@@ -62,6 +90,15 @@ const ContactForm = () => {
     // Validar que al menos email o teléfono esté lleno
     if (!formData.email && !formData.telefono) {
       setModalMessage('Debe proporcionar al menos un email o número de teléfono para contactarlo.')
+      setModalType('error')
+      setModalOpen(true)
+      setSubmitting(false)
+      return
+    }
+
+    // Validar formato del email si está presente
+    if (formData.email && !validateEmail(formData.email)) {
+      setModalMessage('El email no es válido. Verifique que tenga el formato correcto (ej: usuario@gmail.com)')
       setModalType('error')
       setModalOpen(true)
       setSubmitting(false)

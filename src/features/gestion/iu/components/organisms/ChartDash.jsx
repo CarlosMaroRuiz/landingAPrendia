@@ -97,15 +97,15 @@ export const ChartDash = ({ municipalitiesData = [] }) => {
   };
 
   return (
-    <div className="w-full bg-white rounded-lg shadow-md p-6 mt-6">
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-gray-900">Datos de registros</h3>
+    <div className="w-full max-w-6xl mx-auto bg-white rounded-lg shadow-md p-8 mt-6">
+      <div className="flex items-center justify-between mb-8">
+        <h3 className="text-xl font-semibold text-gray-900">Datos de registros</h3>
         <select className="text-sm border border-gray-300 rounded px-3 py-2 text-gray-600 hover:border-gray-400">
-          <option>Comunidades</option>
+          <option>Municipio</option>
         </select>
       </div>
 
-      <div className="relative h-80">
+      <div className="relative h-screen max-h-96 md:max-h-[600px] flex items-center justify-center">
         <Bar data={chartData} options={options} />
       </div>
 
