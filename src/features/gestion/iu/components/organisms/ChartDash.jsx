@@ -97,32 +97,36 @@ export const ChartDash = ({ municipalitiesData = [] }) => {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto bg-white rounded-lg shadow-md p-8 mt-6">
-      <div className="flex items-center justify-between mb-8">
-        <h3 className="text-xl font-semibold text-gray-900">Datos de registros</h3>
-        <select className="text-sm border border-gray-300 rounded px-3 py-2 text-gray-600 hover:border-gray-400">
-          <option>Municipio</option>
-        </select>
-      </div>
-
-      <div className="relative h-screen max-h-96 md:max-h-[600px] flex items-center justify-center">
-        <Bar data={chartData} options={options} />
-      </div>
-
-      {/* Legend */}
-      {municipalitiesData.length > 0 && (
-        <div className="flex flex-wrap gap-6 mt-6 justify-center">
-          {municipalitiesData.map((item, index) => (
-            <div key={item.municipio} className="flex items-center gap-2">
-              <div
-                className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: colors[index % colors.length] }}
-              ></div>
-              <span className="text-sm text-gray-600">{item.municipio}</span>
-            </div>
-          ))}
+    <div className="flex justify-center w-full mt-6">
+      <div className="w-full max-w-6xl bg-white rounded-lg shadow-md p-8">
+        <div className="flex items-center justify-between mb-8">
+          <h3 className="text-xl font-semibold text-gray-900">Datos de registros</h3>
+          <select className="text-sm border border-gray-300 rounded px-3 py-2 text-gray-600 hover:border-gray-400">
+            <option>Municipio</option>
+          </select>
         </div>
-      )}
+
+        <div className="w-full flex justify-center">
+          <div className="w-full max-h-96 md:max-h-[600px]">
+            <Bar data={chartData} options={options} />
+          </div>
+        </div>
+
+        {/* Legend */}
+        {municipalitiesData.length > 0 && (
+          <div className="flex flex-wrap gap-6 mt-6 justify-center">
+            {municipalitiesData.map((item, index) => (
+              <div key={item.municipio} className="flex items-center gap-2">
+                <div
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: colors[index % colors.length] }}
+                ></div>
+                <span className="text-sm text-gray-600">{item.municipio}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

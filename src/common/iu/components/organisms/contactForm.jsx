@@ -83,22 +83,53 @@ const ContactForm = () => {
     return emailRegex.test(email)
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setSubmitting(true)
+  const validateForm = () => {
+    // Validar campos requeridos
+    if (!formData.nombre.trim()) {
+      return 'El nombre es obligatorio.'
+    }
+
+    if (!formData.apellidos.trim()) {
+      return 'Los apellidos son obligatorios.'
+    }
+
+    if (!formData.comunidad) {
+      return 'Debe seleccionar una comunidad.'
+    }
+
+    if (formData.comunidad === 'OTROS' && !formData.otraComunidad.trim()) {
+      return 'Debe especificar la comunidad.'
+    }
+
+    if (!formData.municipio) {
+      return 'Debe seleccionar un municipio.'
+    }
+
+    if (!formData.motivo.trim()) {
+      return 'Debe indicar por qué le interesa.'
+    }
 
     // Validar que al menos email o teléfono esté lleno
     if (!formData.email && !formData.telefono) {
-      setModalMessage('Debe proporcionar al menos un email o número de teléfono para contactarlo.')
-      setModalType('error')
-      setModalOpen(true)
-      setSubmitting(false)
-      return
+      return 'Debe proporcionar al menos un email o número de teléfono para contactarlo.'
     }
 
     // Validar formato del email si está presente
     if (formData.email && !validateEmail(formData.email)) {
-      setModalMessage('El email no es válido. Verifique que tenga el formato correcto (ej: usuario@gmail.com)')
+      return 'El email no es válido. Verifique que tenga el formato correcto (ej: usuario@gmail.com)'
+    }
+
+    return null
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setSubmitting(true)
+
+    // Validar todos los campos
+    const validationError = validateForm()
+    if (validationError) {
+      setModalMessage(validationError)
       setModalType('error')
       setModalOpen(true)
       setSubmitting(false)
@@ -123,7 +154,19 @@ const ContactForm = () => {
         motivo: ""
       })
     } else {
-      setModalMessage(result.error || 'Error al enviar el formulario. Intente nuevamente.')
+      // Handle error - avoid showing "[object Object]"
+      let errorMessage = 'Error al enviar el formulario. Intente nuevamente.'
+
+      if (result.error) {
+        if (typeof result.error === 'string') {
+          errorMessage = result.error
+        } else if (typeof result.error === 'object') {
+          // If error is an object, try to extract message property
+          errorMessage = result.error.message || 'Error al enviar el formulario. Verifique los campos y reintente.'
+        }
+      }
+
+      setModalMessage(errorMessage)
       setModalType('error')
       setModalOpen(true)
     }
