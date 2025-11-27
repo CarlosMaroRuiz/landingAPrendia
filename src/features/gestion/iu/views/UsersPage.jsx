@@ -1,14 +1,13 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { SearchBar, Pagination } from '../components/molecules';
 import { UsersTable, ModalGestion } from '../components/organisms';
 import { useFilters } from '../hooks';
 import { useAsync } from '../../../../common/iu/hooks';
-import { getInteresados, updateAttendedStatus } from '../../services/gestionService';
+import { updateAttendedStatus } from '../../services/gestionService';
 
 export const UsersPage = () => {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalResults, setTotalResults] = useState(0);
 
   const {
     searchValue,
@@ -21,41 +20,82 @@ export const UsersPage = () => {
     resetFilters
   } = useFilters({});
 
-  // Use useAsync for fetching users
-  const {
-    execute: fetchUsers,
-    data: usersData,
-    loading: isLoading,
-    error: fetchError
-  } = useAsync(getInteresados);
+  // Local state for users and loading
+  const [usersData, setUsersData] = useState({ data: [], total: 0 });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Use useAsync for updating status
+  // Worker ref
+  const workerRef = useRef(null);
+
+  // Use useAsync for updating status (keep this one)
   const { execute: updateStatus } = useAsync(updateAttendedStatus);
 
-  const loadUsers = useCallback(async () => {
-    try {
-      const result = await fetchUsers({
-        page: currentPage,
-        search: searchValue,
-        community: filters.community,
-        municipality: filters.municipality
-      });
-
-      if (result.error) {
-        setTotalResults(0);
-      } else {
-        setTotalResults(result.total || 0);
-      }
-    } catch (err) {
-      console.error('Error fetching users:', err);
-      setTotalResults(0);
-    }
-  }, [fetchUsers, currentPage, searchValue, filters.community, filters.municipality]);
-
-  // Fetch data from API with pagination, search, and filters
+  // Initial load and polling via Worker
   useEffect(() => {
-    loadUsers();
-  }, [loadUsers]);
+    // Instantiate worker
+    workerRef.current = new Worker(new URL('../../workers/usersPolling.worker.js', import.meta.url));
+
+    // Handle messages from worker
+    workerRef.current.onmessage = (e) => {
+      const { type, payload, error: workerError } = e.data;
+
+      if (type === 'DATA_UPDATED') {
+        setUsersData(payload);
+        setIsLoading(false);
+        setError(null);
+      } else if (type === 'ERROR') {
+        console.error('Worker error:', workerError);
+        setError(workerError);
+        setIsLoading(false);
+      }
+    };
+
+    // Start worker
+    const token = localStorage.getItem('token');
+    const baseUrl = import.meta.env.MODE === 'development'
+      ? '/api'
+      : (import.meta.env.VITE_API_URL || '');
+
+    workerRef.current.postMessage({
+      action: 'START',
+      payload: {
+        token,
+        baseUrl,
+        params: {
+          page: currentPage,
+          search: searchValue,
+          community: filters.community,
+          municipality: filters.municipality
+        }
+      }
+    });
+
+    // Cleanup
+    return () => {
+      if (workerRef.current) {
+        workerRef.current.postMessage({ action: 'STOP' });
+        workerRef.current.terminate();
+      }
+    };
+  }, []); // Run once on mount
+
+  // Update worker params when filters change
+  useEffect(() => {
+    if (workerRef.current) {
+      workerRef.current.postMessage({
+        action: 'UPDATE_PARAMS',
+        payload: {
+          params: {
+            page: currentPage,
+            search: searchValue,
+            community: filters.community,
+            municipality: filters.municipality
+          }
+        }
+      });
+    }
+  }, [currentPage, searchValue, filters.community, filters.municipality]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -82,10 +122,20 @@ export const UsersPage = () => {
       const result = await updateStatus(userId, attended);
 
       if (result.success) {
-        // Refresh the data to show updated status
-        setTimeout(() => {
-          loadUsers();
-        }, 500);
+        // Force refresh via worker
+        if (workerRef.current) {
+          workerRef.current.postMessage({
+            action: 'UPDATE_PARAMS',
+            payload: {
+              params: {
+                page: currentPage,
+                search: searchValue,
+                community: filters.community,
+                municipality: filters.municipality
+              }
+            }
+          });
+        }
       } else {
         console.error('Error al actualizar estado:', result.error);
         alert(`Error: ${result.error}`);
@@ -97,6 +147,7 @@ export const UsersPage = () => {
   };
 
   const resultsPerPage = 10;
+  const totalResults = usersData?.total || 0;
   const totalPages = Math.ceil(totalResults / resultsPerPage);
 
   // Extract users from data structure
